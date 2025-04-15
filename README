@@ -1,0 +1,251 @@
+# API de Gestion des Notes Étudiantes
+
+## Description
+
+Cette application est une API RESTful développée avec Spring Boot. Elle permet aux enseignants de gérer les notes des étudiants pour différents cours. L’API offre des fonctionnalités pour :
+- Enregistrer, mettre à jour, supprimer et consulter les étudiants
+- Enregistrer, mettre à jour, supprimer et consulter les cours
+- Enregistrer, mettre à jour, supprimer et consulter les notes
+- Générer des rapports des notes moyennes par cours et par étudiant
+
+## Fonctionnalités Principales
+
+1. **Gestion des Étudiants**
+   - **POST /students** : Ajouter un nouvel étudiant
+   - **GET /students** : Récupérer la liste de tous les étudiants
+   - **GET /students/{id}** : Récupérer un étudiant par son ID
+   - **PUT /students/{id}** : Mettre à jour les informations d'un étudiant
+   - **DELETE /students/{id}** : Supprimer un étudiant
+
+2. **Gestion des Cours**
+   - **POST /courses** : Ajouter un nouveau cours
+   - **GET /courses** : Récupérer la liste de tous les cours
+   - **GET /courses/{id}** : Récupérer un cours par son ID
+   - **PUT /courses/{id}** : Mettre à jour les informations d'un cours
+   - **DELETE /courses/{id}** : Supprimer un cours
+
+3. **Gestion des Notes**
+   - **POST /grades** : Enregistrer une nouvelle note pour un étudiant dans un cours spécifique
+   - **GET /grades/student/{studentId}** : Récupérer les notes d'un étudiant
+   - **GET /grades/course/{courseId}** : Récupérer les notes pour un cours donné
+   - **PUT /grades/{id}** : Mettre à jour une note existante
+   - **DELETE /grades/{id}** : Supprimer une note
+
+4. **Rapports**
+   - **GET /reports/course/{courseId}** : Générer un rapport des notes moyennes pour un cours
+   - **GET /reports/student/{studentId}** : Générer un rapport des notes moyennes pour un étudiant
+
+## Technologies Utilisées
+
+- **Spring Boot** : Création de l'API RESTful
+- **Spring Data JPA et Hibernate** : Gestion et mapping des entités et des opérations CRUD
+- **MySQL/MariaDB** : Base de données pour stocker les données
+- **Jakarta Bean Validation** : Validation des données d'entrée (ex.: `@NotBlank`)
+- **Lombok** : Réduction du code boilerplate (getters, setters, etc.)
+- **Maven** : Gestion des dépendances et du cycle de vie du projet
+- **XAMPP** : Installation locale de MySQL
+- **Postman** : Test des endpoints de l'API
+
+## Installation et Configuration
+
+### Prérequis
+
+- **JDK 21** (ou version compatible)
+- **Maven** installé et configuré
+- **XAMPP** (ou une autre solution MySQL/MariaDB) avec le service MySQL en fonctionnement
+- **Git** pour le versionnage
+
+### Installation du Projet
+
+1. **Cloner le dépôt :**
+   ```bash
+   git clone https://github.com/valentin-vegee/notes-management-api.git
+   cd notes-management-api
+
+2. **Configuration de la Base de Données :**
+    Lance XAMPP et démarre MySQL.
+    Accède à phpMyAdmin et crée une base de données nommée student_notes_db.
+
+3. **Modifier le fichier de configuration :**
+    Dans le fichier src/main/resources/application.properties, vérifie que la configuration correspond à ta base de données :
+    spring.application.name=notes-management
+
+# Connexion MySQL
+spring.datasource.url=jdbc:mysql://localhost:3306/student_notes_db?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=
+
+# Configuration JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+**Compilation et Lancement**
+
+1. Compiler le projet :
+
+- bash
+mvn clean install -DskipTests
+
+2. Lancer l'application :
+
+- bash
+mvn spring-boot:run
+
+L'application sera accessible sur http://localhost:8080.
+
+**Utilisation de l'API**
+Tester avec Postman
+Configuration de l'environnement
+- Variable d'environnement :
+  - baseUrl : http://localhost:8080 Utilise cette variable dans tes requêtes en remplaçant l'URL par {{baseUrl}}.
+
+Exemples de requêtes
+**Étudiants :**
+
+
+**Ajouter un étudiant (POST /students)**
+- URL : {{baseUrl}}/students
+- Méthode : POST
+- Headers : Content-Type: application/json
+- Body :
+
+    - vjson
+      Copier
+      {
+        "name": "Jean Dupont"
+      }
+Attendu : Statut 201 Created et retour de l'étudiant créé avec son ID.
+
+**Récupérer tous les étudiants (GET /students)**
+- URL : {{baseUrl}}/students
+- Méthode : GET
+Attendu : Statut 200 OK et retour d'un tableau JSON.
+
+**Récupérer un étudiant par ID (GET /students/{id})**
+- URL : {{baseUrl}}/students/1
+- Méthode : GET
+Attendu : Statut 200 OK et retour des détails de l'étudiant.
+
+**Mettre à jour un étudiant (PUT /students/{id})**
+- URL : {{baseUrl}}/students/1
+- Méthode : PUT
+- Headers : Content-Type: application/json
+- Body :
+    - json
+    Copier
+      {
+        "name": "Marie Dupont"
+      }
+Attendu : Statut 200 OK et l'étudiant mis à jour.
+
+**Supprimer un étudiant (DELETE /students/{id})**
+- URL : {{baseUrl}}/students/1
+- Méthode : DELETE
+Attendu : Statut 204 No Content.
+
+**Cours :**
+
+**Ajouter un cours (POST /courses)**
+- URL : {{baseUrl}}/courses
+- Méthode : POST
+- Headers : Content-Type: application/json
+    - Body : json
+      Copier
+        {
+          "name": "Mathematiques"
+        }
+Attendu : Statut 201 Created.
+
+
+**Récupérer tous les cours (GET /courses)**
+- URL : {{baseUrl}}/courses
+- Méthode : GET
+Attendu : Statut 200 OK.
+
+**Récupérer un cours par ID (GET /courses/{id})**
+- URL : {{baseUrl}}/courses/1
+- Méthode : GET
+Attendu : Statut 200 OK.
+
+**Mettre à jour un cours (PUT /courses/{id})**
+- URL : {{baseUrl}}/courses/1
+- Méthode : PUT
+- Headers : Content-Type: application/json
+    - Body : json
+    Copier
+      {
+        "name": "Mathematiques Avancées"
+      }
+Attendu : Statut 200 OK.
+
+**Supprimer un cours (DELETE /courses/{id})**
+- URL : {{baseUrl}}/courses/1
+- Méthode : DELETE
+Attendu : Statut 204 No Content.
+
+
+**Notes :**
+Note : Avant d'ajouter une note, vérifie que l'étudiant et le cours existent (via les endpoints ci-dessus).
+
+**Ajouter une note (POST /grades)**
+- URL : {{baseUrl}}/grades
+- Méthode : POST
+- Headers : Content-Type: application/json
+    - Body : json
+        Copier
+        {
+          "gradeValue": 15.5,
+          "student": { "id": 1 },
+          "course": { "id": 1 }
+        }
+Attendu : Statut 201 Created, avec un enregistrement de la note retourné.
+
+**Récupérer les notes d'un étudiant (GET /grades/student/{studentId})**
+- URL : {{baseUrl}}/grades/student/1
+- Méthode : GET
+Attendu : Statut 200 OK, et un tableau JSON des notes.
+
+**Récupérer les notes d'un cours (GET /grades/course/{courseId})**
+- URL : {{baseUrl}}/grades/course/1
+- Méthode : GET
+Attendu : Statut 200 OK.
+
+**Mettre à jour une note (PUT /grades/{id})**
+- URL : {{baseUrl}}/grades/1
+- Méthode : PUT
+- Headers : Content-Type: application/json
+    - Body : json
+      Copier
+        {
+          "gradeValue": 18.0
+        }
+Attendu : Statut 200 OK.
+
+**Supprimer une note (DELETE /grades/{id})**
+- URL : {{baseUrl}}/grades/1
+- Méthode : DELETE
+Attendu : Statut 204 No Content.
+
+**Rapports :**
+
+**Rapport de la moyenne des notes pour un cours (GET /reports/course/{courseId})**
+- URL : {{baseUrl}}/reports/course/1
+- Méthode : GET
+Attendu : Statut 200 OK, avec la moyenne des notes.
+
+**Rapport de la moyenne des notes pour un étudiant (GET /reports/student/{studentId})**
+- URL : {{baseUrl}}/reports/student/1
+- Méthode : GET
+Attendu : Statut 200 OK, avec la moyenne des notes.
+
+**Versionnage et Collaboration**
+Le projet est versionné avec Git et hébergé sur GitHub.
+Dépôt GitHub : https://github.com/valentin-vegee/notes-management-api
+
+
+**Aide et Documentation**
+Pour toute question ou problème, consultez :
+- Documentation Spring Boot
+- Documentation Spring Data JPA
+- Documentation Hibernate
